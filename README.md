@@ -1,4 +1,4 @@
-# Agent Judgment Layer
+# Agent Judgment Specification
 
 **This project defines how judgment must be recorded before autonomous agent actions occur.**
 
@@ -22,12 +22,12 @@ This project does not enforce decisions. It defines:
 **The structural difference:**
 
 ```
-WITHOUT this layer:
+WITHOUT this specification:
 [Agent] → [Action] → [Execution] → [Log]
                                      ↑
                           Responsibility inferred after
 
-WITH this layer:
+WITH this specification:
 [Agent] → [Action] → [Judgment Record] → [Authority Transfer] → [Decision]
                             ↑
                   Responsibility assigned before
@@ -91,7 +91,7 @@ If you need production implementation, contact egoholdings.response@gmail.com.
 This specification is not evaluated by running code.
 It is evaluated by mapping it onto your existing agent workflows.
 
-The goal of this guide is to help you determine whether this judgment layer
+The goal of this guide is to help you determine whether this judgment specification
 clarifies responsibility and authority boundaries in your system — without
 changing your runtime.
 
@@ -262,6 +262,18 @@ This project emerged from the January 2026 discussion on autonomous agent execut
 > "Accountability requires a record of judgment, not just a log of actions."
 
 This defines the record format.
+
+---
+
+## Authorship & Process
+
+This specification is authored and maintained by a human maintainer.
+AI-assisted tools were used as drafting and editing aids,
+while all structural decisions, scope boundaries, and responsibility
+definitions are human-authored and reviewed.
+
+The maintainer retains full responsibility for the content and direction
+of this specification.
 
 ---
 
