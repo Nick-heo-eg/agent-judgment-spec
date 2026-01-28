@@ -222,9 +222,8 @@ This specification defines the structure that makes governance possible.
 ## Roadmap
 
 - [x] Initial taxonomy and format (v1.0)
-- [ ] Reference implementation (Python)
-- [ ] GitHub Action for PR validation
-- [ ] Integration examples for major agent frameworks
+- [ ] Integration mapping examples (conceptual, non-executable)
+- [ ] Judgment record validation patterns
 - [ ] Community feedback period (Q1 2026)
 
 ---
