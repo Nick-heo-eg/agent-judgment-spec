@@ -224,7 +224,7 @@ This specification defines the structure that makes governance possible.
 - [x] Initial taxonomy and format (v1.0)
 - [ ] Integration mapping examples (conceptual, non-executable)
 - [ ] Judgment record validation patterns
-- [ ] Community feedback period (Q1 2026)
+- [ ] Community feedback period (2026)
 
 ---
 
