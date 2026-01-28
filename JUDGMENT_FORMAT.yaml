@@ -1,0 +1,149 @@
+# Judgment Format Specification v1.0
+
+# This file defines the standard format for agent judgment records.
+# Every autonomous action should produce a judgment trace in this format.
+
+judgment_id: "jdg_2026-01-29_abc123"  # Unique identifier
+timestamp: "2026-01-29T12:34:56Z"      # ISO 8601 UTC
+
+# ============================================================
+# AGENT CONTEXT
+# ============================================================
+agent:
+  name: "claude-code"
+  version: "1.2.3"
+  session_id: "sess_xyz789"
+  user_id: "user_email@example.com"  # Or anonymous identifier
+
+# ============================================================
+# ACTION PROPOSAL
+# ============================================================
+action:
+  type: "EXEC"  # One of: READ, WRITE, EXEC (see ACTION_TAXONOMY.md)
+  tool: "git"
+  command: "git push origin main"
+  targets:
+    - "origin/main"
+  scope: "repository"
+  estimated_impact: "public_release"
+
+# ============================================================
+# JUDGMENT DECISION
+# ============================================================
+decision:
+  outcome: "block"  # One of: allow, block, escalate
+  reason: "Push to main requires human approval"
+  rule_id: "rule_exec_001"
+  confidence: 1.0  # 0.0 to 1.0
+
+# ============================================================
+# APPROVAL CHAIN (if applicable)
+# ============================================================
+approval:
+  required: true
+  approver_id: "user_email@example.com"
+  approved_at: null  # Filled when approval granted
+  method: "cli_prompt"  # cli_prompt, web_ui, api
+
+# ============================================================
+# TRACE & AUDIT
+# ============================================================
+trace:
+  conversation_id: "conv_abc123"
+  prior_actions: 3  # Number of actions in this session
+  risk_score: 0.85  # Cumulative risk assessment
+
+audit:
+  logged: true
+  sealed: false  # Commercial feature: non-repudiable seal
+  compliance_tags:
+    - "supply_chain"
+    - "ci_cd_modification"
+
+# ============================================================
+# EXTENSIBILITY
+# ============================================================
+metadata:
+  framework: "anthropic/claude-code"
+  custom_fields: {}  # For framework-specific extensions
+
+---
+
+# EXAMPLE: Allowed READ action
+judgment_id: "jdg_2026-01-29_read001"
+timestamp: "2026-01-29T12:30:00Z"
+
+agent:
+  name: "cursor"
+  version: "0.41.0"
+  session_id: "sess_read123"
+
+action:
+  type: "READ"
+  tool: "cat"
+  command: "cat src/main.py"
+  targets:
+    - "src/main.py"
+
+decision:
+  outcome: "allow"
+  reason: "Read action, no modification"
+  rule_id: "rule_read_001"
+  confidence: 1.0
+
+approval:
+  required: false
+
+trace:
+  conversation_id: "conv_read123"
+  prior_actions: 0
+  risk_score: 0.0
+
+---
+
+# EXAMPLE: Escalated WRITE action
+judgment_id: "jdg_2026-01-29_write001"
+timestamp: "2026-01-29T12:32:00Z"
+
+agent:
+  name: "devin"
+  version: "2.0.0"
+  session_id: "sess_write123"
+
+action:
+  type: "WRITE"
+  tool: "edit"
+  command: "edit package.json"
+  targets:
+    - "package.json"
+  scope: "dependency_manifest"
+
+decision:
+  outcome: "escalate"
+  reason: "Dependency changes require security review"
+  rule_id: "rule_write_003"
+  confidence: 0.9
+
+approval:
+  required: true
+  approver_id: null  # Awaiting assignment
+  method: "web_ui"
+
+trace:
+  conversation_id: "conv_write123"
+  prior_actions: 5
+  risk_score: 0.6
+
+audit:
+  compliance_tags:
+    - "supply_chain"
+    - "sbom_affected"
+
+---
+
+# Schema Notes:
+# 1. All timestamps must be UTC ISO 8601
+# 2. decision.outcome is REQUIRED
+# 3. action.type must match ACTION_TAXONOMY.md
+# 4. Extensions go in metadata.custom_fields
+# 5. This format is intentionally flat for easy parsing
