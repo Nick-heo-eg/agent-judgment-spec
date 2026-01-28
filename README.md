@@ -85,53 +85,88 @@ If you need production implementation, contact egoholdings.response@gmail.com.
 
 ---
 
-## Quick Start
+## Minimal Adoption Guide
+### Evaluation by Mapping (No Runtime Required)
 
-### For Agent Framework Authors
+This specification is not evaluated by running code.
+It is evaluated by mapping it onto your existing agent workflows.
 
-1. **Classify your agent's actions** using `ACTION_TAXONOMY.md`
-2. **Create judgment records** in `JUDGMENT_FORMAT.yaml` format
-3. **Transfer authority** when escalation is triggered
+The goal of this guide is to help you determine whether this judgment layer
+clarifies responsibility and authority boundaries in your system — without
+changing your runtime.
 
-Example pseudocode:
+### Step 1: Identify an Agent Action
+Select one concrete action your agent currently performs autonomously.
 
-```python
-def execute_agent_action(action):
-    judgment = classify_action(action)  # Returns READ/WRITE/EXEC
+Examples:
+- Modifying a dependency manifest
+- Triggering a deployment pipeline
+- Publishing changes to a shared system
 
-    # Create judgment record
-    record = create_judgment_record(
-        action=action,
-        classification=judgment,
-        responsibility=determine_accountability(action)
-    )
+### Step 2: Classify the Action
+Classify the action using `ACTION_TAXONOMY.md`.
 
-    # If escalation is triggered, judgment authority transfers
-    if record.escalation.triggered:
-        # Framework transfers decision to target_authority
-        # Context is preserved in the judgment record
-        return transfer_authority(record)
+Ask:
+- Does this action propagate state beyond the local context?
+- Can it affect external systems or other parties?
 
-    return record
-```
+Classification must be one of:
+- READ
+- WRITE
+- EXEC
 
-### For Integration Authors
+If the action is EXEC, a judgment record is required.
 
-Validate judgment records in your workflow:
+### Step 3: Create a Judgment Record
+Using `JUDGMENT_FORMAT.yaml`, create a judgment record for this action.
 
-```yaml
-# Example: CI validation
-on: pull_request
-jobs:
-  validate_judgment:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check judgment records exist
-        run: |
-          # Verify PR includes judgment traces
-          # Validate responsibility attribution
-          # How you use this is framework-specific
-```
+You do not need to enforce the decision.
+You only need to record:
+
+- The proposed action
+- The decision outcome (allow / escalate / block)
+- The rationale for that decision
+- Who bears final accountability
+
+This can be done as a static YAML or JSON file.
+
+### Step 4: Assign Responsibility Explicitly
+Fill in the `responsibility` section.
+
+In particular:
+- `accountable_party`: Who bears final accountability?
+- `decision_maker`: Who made the judgment?
+- `authority_source`: Why does this entity have authority?
+
+If this information feels unclear or contested,
+that ambiguity already exists in your system.
+This specification makes it visible.
+
+### Step 5: Evaluate Authority Transfer
+If the action is high-impact (EXEC), determine whether judgment authority
+should remain with the agent or transfer to another party.
+
+If authority transfers:
+- Set `decision.outcome: escalate`
+- Define `target_authority`
+- Preserve the judgment context for the next decision-maker
+
+No enforcement mechanism is required to perform this evaluation.
+
+### What to Look For
+After completing this mapping, ask:
+
+- Is responsibility clearly assigned before execution?
+- Is judgment authority explicit or implicit?
+- Could this record explain the decision during an audit or incident review?
+
+If the answer is yes, this specification is compatible with your system.
+
+If the answer is no, this specification reveals a governance gap —
+not a tooling problem.
+
+This repository defines the record.
+How you act on it is intentionally left to your framework.
 
 ---
 
