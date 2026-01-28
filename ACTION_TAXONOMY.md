@@ -11,12 +11,17 @@ Every action an AI agent takes falls into one of three categories, regardless of
 ### READ
 **Definition:** Actions that observe state without modification.
 
+**Characteristics:**
+- State observation only
+- No resource allocation
+- No side effects
+- Idempotent operations
+
 **Examples:**
-- `git status`
-- `cat file.txt`
-- API GET requests
-- Database SELECT queries
 - File system reads
+- Query operations
+- Status checks
+- Information retrieval
 
 **Risk Level:** Low
 **Judgment Required:** Minimal (privacy/access control only)
@@ -26,12 +31,17 @@ Every action an AI agent takes falls into one of three categories, regardless of
 ### WRITE
 **Definition:** Actions that modify state but do not trigger execution.
 
+**Characteristics:**
+- State mutation
+- Local scope only
+- No immediate propagation
+- Reversible through version control
+
 **Examples:**
-- Edit source code
-- Modify configuration files
-- Create new files
-- Database INSERT/UPDATE
-- `git add`, `git commit`
+- File modifications
+- Local data updates
+- Configuration changes
+- Staged commits (not published)
 
 **Risk Level:** Medium
 **Judgment Required:** High (irreversibility, scope of change)
@@ -41,53 +51,66 @@ Every action an AI agent takes falls into one of three categories, regardless of
 ### EXEC
 **Definition:** Actions that trigger computation, side effects, or propagation.
 
+**Characteristics:**
+- State propagation to external systems
+- Resource allocation and execution
+- Side effects beyond local scope
+- Irreversible without manual intervention
+
 **Examples:**
-- `git push`
-- `npm install` (runs scripts)
-- CI/CD pipeline triggers
-- Production deployments
-- `docker run`
-- Sending emails/notifications
-- Modifying `.github/workflows/`
+- Publishing changes to shared systems
+- Triggering automated pipelines
+- Deploying to production
+- Modifying execution definitions
+- External communications
+- Package installations with side effects
 
 **Risk Level:** High
-**Judgment Required:** Mandatory (non-bypassable approval)
+**Judgment Required:** Requires explicit judgment record
 
 ---
 
 ## Special Cases
 
 ### Compound Actions
-Some operations cross boundaries:
+Some operations cross classification boundaries:
 
-| Action | Classification | Reason |
-|--------|---------------|---------|
-| `git commit -m "..." && git push` | EXEC | Push component triggers propagation |
-| `npm install` | EXEC | Can run arbitrary scripts via lifecycle hooks |
-| `docker build` | WRITE | Only creates image, doesn't run |
-| `docker run` | EXEC | Executes container |
+| Pattern | Classification | Reason |
+|---------|---------------|---------|
+| Stage + Publish | EXEC | Publishing component triggers propagation |
+| Package installation | EXEC | May execute arbitrary code during setup |
+| Build artifact | WRITE | Creates output, doesn't execute |
+| Run artifact | EXEC | Initiates execution context |
 
 ### Escalation Rules
 
-1. **Any action touching CI/CD definitions → EXEC**
-   - `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`
+1. **Modifying execution definitions → EXEC**
+   - Pipeline configurations
+   - Workflow specifications
+   - Automation rules
    - Rationale: Defines future execution behavior
 
-2. **Package manager operations → EXEC**
-   - `package.json`, `Gemfile`, `requirements.txt` changes
-   - Rationale: Supply chain risk
+2. **Dependency manifest changes → EXEC**
+   - Package declarations
+   - Dependency lists
+   - Library specifications
+   - Rationale: Supply chain impact
 
-3. **Infrastructure as Code → EXEC**
-   - `terraform apply`, `kubectl apply`
+3. **Infrastructure declarations → EXEC**
+   - Resource provisioning
+   - Service deployment
+   - System configuration
    - Rationale: Real-world resource changes
 
 ---
 
 ## Design Principle
 
-> **"If it can reach production or external systems without another human step, it's EXEC."**
+> **"If propagation occurs beyond the local context without explicit intervention, classify as EXEC."**
 
 This taxonomy is intentionally simple to allow broad adoption across agent frameworks.
+
+**Key test:** Can this action affect external parties or systems? If yes, it requires a judgment record with responsibility attribution.
 
 ---
 

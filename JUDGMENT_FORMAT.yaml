@@ -33,8 +33,29 @@ action:
 decision:
   outcome: "block"  # One of: allow, block, escalate
   reason: "Push to main requires human approval"
+  rationale: "Organization policy P-2024-003 requires explicit approval for main branch modifications"
   rule_id: "rule_exec_001"
   confidence: 1.0  # 0.0 to 1.0
+
+# ============================================================
+# RESPONSIBILITY
+# ============================================================
+responsibility:
+  # Who bears final accountability for this action
+  accountable_party: "user"  # One of: agent, user, organization, policy
+  decision_maker: "agent"     # Who made the judgment
+  authority_source: "organization_policy"  # Basis for decision authority
+  binding: false  # Commercial feature: tamper-proof binding
+
+# ============================================================
+# ESCALATION (structural definition)
+# ============================================================
+escalation:
+  # Conditions under which judgment is deferred to higher authority
+  triggered: true
+  target_authority: "user"  # Where judgment is escalated to
+  condition: "action_type_exec_on_protected_branch"
+  # NOTE: This defines WHAT escalates, not HOW enforcement works
 
 # ============================================================
 # APPROVAL CHAIN (if applicable)
@@ -88,8 +109,20 @@ action:
 decision:
   outcome: "allow"
   reason: "Read action, no modification"
+  rationale: "READ actions require no approval under default policy"
   rule_id: "rule_read_001"
   confidence: 1.0
+
+responsibility:
+  accountable_party: "agent"
+  decision_maker: "agent"
+  authority_source: "default_policy"
+  binding: false
+
+escalation:
+  triggered: false
+  target_authority: null
+  condition: null
 
 approval:
   required: false
@@ -121,8 +154,20 @@ action:
 decision:
   outcome: "escalate"
   reason: "Dependency changes require security review"
+  rationale: "Supply chain policy SC-2025-001 mandates review for dependency manifest modifications"
   rule_id: "rule_write_003"
   confidence: 0.9
+
+responsibility:
+  accountable_party: "organization"
+  decision_maker: "agent"
+  authority_source: "supply_chain_policy"
+  binding: false
+
+escalation:
+  triggered: true
+  target_authority: "organization_security_team"
+  condition: "dependency_manifest_modification"
 
 approval:
   required: true
@@ -144,6 +189,9 @@ audit:
 # Schema Notes:
 # 1. All timestamps must be UTC ISO 8601
 # 2. decision.outcome is REQUIRED
-# 3. action.type must match ACTION_TAXONOMY.md
-# 4. Extensions go in metadata.custom_fields
-# 5. This format is intentionally flat for easy parsing
+# 3. decision.rationale must be audit-defensible (not just technical reason)
+# 4. responsibility.accountable_party defines who bears final accountability
+# 5. escalation defines WHAT triggers deferral, not HOW enforcement works
+# 6. action.type must match ACTION_TAXONOMY.md
+# 7. Extensions go in metadata.custom_fields
+# 8. This format defines the judgment record, not the enforcement mechanism

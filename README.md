@@ -1,26 +1,29 @@
 # Agent Judgment Layer
 
-**This project defines a non-bypassable judgment step before autonomous agent actions.**
+**This project defines how judgment must be recorded before autonomous agent actions occur.**
 
 ---
 
-## Why This Matters
+## What This Is
 
-Recent incidents (Clawdbot, autonomous coding agents) exposed a critical gap:
+Autonomous agents require a structural answer to a simple question:
 
-> **AI agents act before humans can judge.**
+> **When must an action wait for human judgment?**
 
-Current solutions focus on:
-- Model safety (too early)
-- Logging/monitoring (too late)
+This project does not enforce decisions. It defines:
+- How actions are classified
+- How decisions are recorded
+- Who bears responsibility
 
-**This layer operates at execution time:**
+**The judgment interface:**
 
 ```
-[Agent proposes action] → [Judgment layer] → [Human approval if needed] → [Execution]
+[Agent proposes action] → [Judgment record created] → [Decision logged] → [Action proceeds or waits]
                               ↑
-                         Decision point
+                      Definition boundary
 ```
+
+This is not a security tool. It is a **responsibility interface**.
 
 ---
 
@@ -49,17 +52,17 @@ This repository provides **the judgment skeleton**:
 ## What's NOT Included (Commercial)
 
 This repository **does not** include:
-- Enforcement runtime (cannot be bypassed)
-- Human-in-the-loop binding
-- Responsibility sealing (tamper-proof approval records)
+- Runtime implementation
+- Responsibility binding mechanisms
+- Tamper-proof sealing
 - Organization policy engines
-- Compliance audit trails
+- Compliance audit systems
 
 **Why separate?**
 - Open standards enable adoption
-- Enforcement requires liability and support
+- Implementation requires liability and support
 
-If you need production-grade enforcement, contact [your-email].
+If you need production implementation, contact [your-email].
 
 ---
 
@@ -69,7 +72,7 @@ If you need production-grade enforcement, contact [your-email].
 
 1. **Classify your agent's actions** using `ACTION_TAXONOMY.md`
 2. **Emit judgment records** in `JUDGMENT_FORMAT.yaml` format
-3. **Block EXEC actions** until approval is granted
+3. **Record responsibility** before action execution
 
 Example pseudocode:
 
@@ -77,30 +80,34 @@ Example pseudocode:
 def execute_agent_action(action):
     judgment = classify_action(action)  # Returns READ/WRITE/EXEC
 
-    if judgment.type == "EXEC":
-        approval = request_human_approval(action)
-        if not approval.granted:
-            raise ExecutionBlocked("Human approval required")
+    # Create judgment record
+    record = create_judgment_record(
+        action=action,
+        classification=judgment,
+        responsibility=determine_accountability(action)
+    )
 
-    record_judgment(judgment)  # Log in JUDGMENT_FORMAT
-    return perform_action(action)
+    # Your framework decides what to do with this record
+    # (enforcement is framework-specific, not defined here)
+    return record
 ```
 
-### For GitHub Bot Authors
+### For Integration Authors
 
-Add a pre-merge hook:
+Validate judgment records in your workflow:
 
 ```yaml
-# .github/workflows/agent-judgment.yml
+# Example: CI validation
 on: pull_request
 jobs:
-  check_agent_actions:
+  validate_judgment:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate judgment records
+      - name: Check judgment records exist
         run: |
-          # Check if PR includes judgment traces
-          # Block merge if high-risk actions lack approval
+          # Verify PR includes judgment traces
+          # Validate responsibility attribution
+          # How you use this is framework-specific
 ```
 
 ---
@@ -153,13 +160,12 @@ Apache 2.0 - See [LICENSE](LICENSE)
 
 ## Context
 
-This project emerged from the January 2026 debate around autonomous agents (Clawdbot incident, execution safety discussions).
+This project emerged from the January 2026 discussion on autonomous agent execution patterns.
 
-**Core insight:**
-> "The problem isn't that AI is too powerful.
-> The problem is that judgment happens after execution."
+**Core principle:**
+> "Accountability requires a record of judgment, not just a log of actions."
 
-We're fixing the order.
+This defines the record format.
 
 ---
 
