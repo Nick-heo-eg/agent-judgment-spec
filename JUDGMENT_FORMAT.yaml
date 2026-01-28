@@ -10,7 +10,7 @@ timestamp: "2026-01-29T12:34:56Z"      # ISO 8601 UTC
 # AGENT CONTEXT
 # ============================================================
 agent:
-  name: "claude-code"
+  name: "agent-framework-a"
   version: "1.2.3"
   session_id: "sess_xyz789"
   user_id: "user_email@example.com"  # Or anonymous identifier
@@ -64,7 +64,7 @@ audit:
 # EXTENSIBILITY
 # ============================================================
 metadata:
-  framework: "anthropic/claude-code"
+  framework: "org/agent-framework-a"
   custom_fields: {}  # For framework-specific extensions
 
 ---
@@ -74,7 +74,7 @@ judgment_id: "jdg_2026-01-29_read001"
 timestamp: "2026-01-29T12:30:00Z"
 
 agent:
-  name: "cursor"
+  name: "agent-framework-b"
   version: "0.41.0"
   session_id: "sess_read123"
 
@@ -106,7 +106,7 @@ judgment_id: "jdg_2026-01-29_write001"
 timestamp: "2026-01-29T12:32:00Z"
 
 agent:
-  name: "devin"
+  name: "agent-framework-c"
   version: "2.0.0"
   session_id: "sess_write123"
 

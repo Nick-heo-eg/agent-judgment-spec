@@ -120,7 +120,7 @@ jobs:
 - [x] Initial taxonomy and format (v1.0)
 - [ ] Reference implementation (Python)
 - [ ] GitHub Action for PR validation
-- [ ] Integration examples (Claude Code, Cursor, Devin)
+- [ ] Integration examples for major agent frameworks
 - [ ] Community feedback period (Q1 2026)
 
 ---
@@ -153,7 +153,7 @@ Apache 2.0 - See [LICENSE](LICENSE)
 
 ## Context
 
-This project emerged from the January 2026 debate around autonomous agents (Clawdbot incident, Claude Code discussion).
+This project emerged from the January 2026 debate around autonomous agents (Clawdbot incident, execution safety discussions).
 
 **Core insight:**
 > "The problem isn't that AI is too powerful.
