@@ -8,24 +8,41 @@
 
 ## What This Is
 
+**This specification ensures that when autonomous agents act, they are never the sole decision-maker.**
+
 Autonomous agents require a structural answer to a simple question:
 
-> **When must an action wait for human judgment?**
+> **When must judgment authority shift from agent to human?**
 
 This project does not enforce decisions. It defines:
-- How actions are classified
-- How decisions are recorded
+- How actions are classified by external impact
+- How judgment authority is transferred
 - Who bears responsibility
 
-**The judgment interface:**
+**The structural difference:**
 
 ```
-[Agent proposes action] → [Judgment record created] → [Decision logged] → [Action proceeds or waits]
-                              ↑
-                      Definition boundary
+WITHOUT this layer:
+[Agent] → [Action] → [Execution] → [Log]
+                                     ↑
+                          Responsibility inferred after
+
+WITH this layer:
+[Agent] → [Action] → [Judgment Record] → [Authority Transfer] → [Decision]
+                            ↑
+                  Responsibility assigned before
+                  Judgment authority can shift to human/org
 ```
 
-This is not a security tool. It is a **responsibility interface**.
+**This is not about stopping actions. It's about switching decision authority.**
+
+When an action requires human judgment:
+- The agent doesn't hit a wall
+- Judgment authority transfers to the appropriate party
+- Context is preserved for the next decision-maker
+- Choice becomes possible
+
+This is not a security tool. It is a **judgment authority transfer protocol**.
 
 ---
 
@@ -40,9 +57,9 @@ This repository provides **the judgment skeleton**:
 
 2. **[JUDGMENT_FORMAT.yaml](JUDGMENT_FORMAT.yaml)**
    - Standard trace format for judgment records
-   - Decision states: `allow`, `block`, `escalate`
-   - Approval chain structure
-   - Audit metadata
+   - Authority transfer states: `allow`, `escalate`, `block`
+   - Responsibility attribution structure
+   - Context preservation for next decision-maker
 
 **Use cases:**
 - GitHub bot authors: Add judgment hooks before PR merges
@@ -73,8 +90,8 @@ If you need production implementation, contact egoholdings.response@gmail.com.
 ### For Agent Framework Authors
 
 1. **Classify your agent's actions** using `ACTION_TAXONOMY.md`
-2. **Emit judgment records** in `JUDGMENT_FORMAT.yaml` format
-3. **Record responsibility** before action execution
+2. **Create judgment records** in `JUDGMENT_FORMAT.yaml` format
+3. **Transfer authority** when escalation is triggered
 
 Example pseudocode:
 
@@ -89,8 +106,12 @@ def execute_agent_action(action):
         responsibility=determine_accountability(action)
     )
 
-    # Your framework decides what to do with this record
-    # (enforcement is framework-specific, not defined here)
+    # If escalation is triggered, judgment authority transfers
+    if record.escalation.triggered:
+        # Framework transfers decision to target_authority
+        # Context is preserved in the judgment record
+        return transfer_authority(record)
+
     return record
 ```
 
@@ -114,13 +135,52 @@ jobs:
 
 ---
 
+## Why Logs Are Not Enough
+
+Logs record what happened.
+**Judgment records explain why it was allowed to happen.**
+
+### The Problem with Post-Execution Logs
+
+Without a judgment record:
+- **Responsibility is inferred** (reconstructed from logs after the fact)
+- **Authority is ambiguous** (who had the right to approve this?)
+- **Context is lost** (why did this seem reasonable at the time?)
+- **Choice is eliminated** (action already executed)
+
+### What Judgment Records Provide
+
+With a judgment record created before execution:
+- **Responsibility is assigned** (explicit accountability)
+- **Authority is transferred** (clear decision-maker for each action type)
+- **Context is preserved** (rationale, policy basis, risk assessment)
+- **Choice is enabled** (human can decide whether to proceed)
+
+**The difference:**
+Logs are for audit.
+Judgment records are for governance.
+
+This specification defines the structure that makes governance possible.
+
+---
+
 ## Design Philosophy
 
-**Three principles:**
+**Core principle:**
+> When autonomous agents propose high-impact actions, judgment authority must be transferable.
 
-1. **Judgment happens before execution, not after**
-2. **Risk classification is universal (READ/WRITE/EXEC)**
-3. **Standards are open, enforcement is not**
+**Three mechanisms:**
+
+1. **Classification by external impact** (READ/WRITE/EXEC)
+   - Not by agent capability, but by action consequences
+
+2. **Judgment authority transfer**
+   - When EXEC actions are proposed, authority can shift to human/org
+   - The record preserves context for the next decision-maker
+
+3. **Responsibility before execution**
+   - Accountability is assigned before action, not reconstructed after
+   - Standards are open, implementation is not
 
 ---
 

@@ -32,6 +32,9 @@ action:
 # ============================================================
 decision:
   outcome: "block"  # One of: allow, block, escalate
+  # - allow: agent retains decision authority
+  # - escalate: decision authority transfers to another party
+  # - block: policy prohibits this action (no authority can approve)
   reason: "Push to main requires human approval"
   rationale: "Organization policy P-2024-003 requires explicit approval for main branch modifications"
   rule_id: "rule_exec_001"
@@ -48,14 +51,15 @@ responsibility:
   binding: false  # Reserved for implementations that support non-repudiable binding
 
 # ============================================================
-# ESCALATION (structural definition)
+# ESCALATION (authority transfer definition)
 # ============================================================
 escalation:
-  # Conditions under which judgment is deferred to higher authority
+  # Defines when and to whom judgment authority transfers
   triggered: true
-  target_authority: "user"  # Where judgment is escalated to
+  target_authority: "user"  # Party who receives decision authority
   condition: "action_type_exec_on_protected_branch"
-  # NOTE: This defines WHAT escalates, not HOW enforcement works
+  # NOTE: This defines authority transfer conditions, not enforcement mechanism
+  # The agent's judgment ends here. The target_authority makes the next decision.
 
 # ============================================================
 # APPROVAL CHAIN (if applicable)
