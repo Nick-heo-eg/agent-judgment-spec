@@ -2,6 +2,8 @@
 
 **This project defines how judgment must be recorded before autonomous agent actions occur.**
 
+**This specification is intentionally non-executable.**
+
 ---
 
 ## What This Is
@@ -62,7 +64,7 @@ This repository **does not** include:
 - Open standards enable adoption
 - Implementation requires liability and support
 
-If you need production implementation, contact [your-email].
+If you need production implementation, contact egoholdings.response@gmail.com.
 
 ---
 
@@ -172,7 +174,7 @@ This defines the record format.
 ## Contact
 
 - **GitHub Issues:** For technical questions
-- **Email:** [your-email] for commercial/partnership inquiries
+- **Email:** egoholdings.response@gmail.com for commercial/partnership inquiries
 
 ---
 

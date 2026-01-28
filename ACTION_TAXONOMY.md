@@ -2,7 +2,10 @@
 
 **Purpose:** Define a universal classification system for autonomous agent actions.
 
-Every action an AI agent takes falls into one of three categories, regardless of the underlying tool or API:
+Every action an AI agent takes falls into one of three categories, regardless of the underlying tool or API.
+
+**Classification Principle:**
+This taxonomy classifies actions by their external impact, not by the intent or capability of the agent.
 
 ---
 

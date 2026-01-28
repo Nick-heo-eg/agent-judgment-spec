@@ -35,7 +35,7 @@ decision:
   reason: "Push to main requires human approval"
   rationale: "Organization policy P-2024-003 requires explicit approval for main branch modifications"
   rule_id: "rule_exec_001"
-  confidence: 1.0  # 0.0 to 1.0
+  confidence: 1.0  # Confidence in judgment correctness (0.0 to 1.0), not execution success
 
 # ============================================================
 # RESPONSIBILITY
@@ -45,7 +45,7 @@ responsibility:
   accountable_party: "user"  # One of: agent, user, organization, policy
   decision_maker: "agent"     # Who made the judgment
   authority_source: "organization_policy"  # Basis for decision authority
-  binding: false  # Commercial feature: tamper-proof binding
+  binding: false  # Reserved for implementations that support non-repudiable binding
 
 # ============================================================
 # ESCALATION (structural definition)
@@ -76,7 +76,7 @@ trace:
 
 audit:
   logged: true
-  sealed: false  # Commercial feature: non-repudiable seal
+  sealed: false  # Reserved for implementations that support non-repudiable seal
   compliance_tags:
     - "supply_chain"
     - "ci_cd_modification"
@@ -117,7 +117,7 @@ responsibility:
   accountable_party: "agent"
   decision_maker: "agent"
   authority_source: "default_policy"
-  binding: false
+  binding: false  # Reserved for implementations that support non-repudiable binding
 
 escalation:
   triggered: false
@@ -162,7 +162,7 @@ responsibility:
   accountable_party: "organization"
   decision_maker: "agent"
   authority_source: "supply_chain_policy"
-  binding: false
+  binding: false  # Reserved for implementations that support non-repudiable binding
 
 escalation:
   triggered: true
@@ -193,5 +193,7 @@ audit:
 # 4. responsibility.accountable_party defines who bears final accountability
 # 5. escalation defines WHAT triggers deferral, not HOW enforcement works
 # 6. action.type must match ACTION_TAXONOMY.md
-# 7. Extensions go in metadata.custom_fields
-# 8. This format defines the judgment record, not the enforcement mechanism
+# 7. action.tool and action.command are optional, framework-specific descriptors
+#    Core judgment relies on action.type and scope, not specific commands
+# 8. Extensions go in metadata.custom_fields
+# 9. This format defines the judgment record, not the enforcement mechanism
