@@ -1,5 +1,7 @@
 # Agent Judgment Specification
 
+This repository specifies governance and boundary conditions that prevent AI systems from exercising judgment.
+
 **This project defines how judgment must be recorded before autonomous agent actions occur.**
 
 **This specification is intentionally non-executable.**
