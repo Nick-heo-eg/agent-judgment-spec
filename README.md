@@ -1,5 +1,10 @@
 # Agent Judgment Specification
 
+> **This repository is part of the AI Execution Boundary Standard (AEBS).**
+> **See:** https://github.com/Nick-heo-eg/ai-execution-boundary-spec
+
+---
+
 This repository specifies governance and boundary conditions that prevent AI systems from exercising judgment.
 
 **This project defines how judgment must be recorded before autonomous agent actions occur.**
